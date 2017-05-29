@@ -9,8 +9,8 @@
 using namespace std;
 void printBoard(vector<int> board);
 int checkAttacks(vector<int> board);
-vector<int> mutate(vector<int> individuo);
-vector<int> crossover(vector<int> individuo1,vector<int> individuo2);
+vector<int> mutate(vector<int> individual);
+vector<int> crossover(vector<int> individual1,vector<int> individual2);
 vector< vector<int> > generateMutants (vector< vector<int> > population);
 vector< vector<int> > generateOffspring (vector< vector<int> > population);
 void printPopulation(vector< vector<int> > population);
@@ -21,10 +21,10 @@ void printVector(vector<int> a);
 
 int main()
 {
-      vector< vector<int> > population;
-      vector<int> qualities;
+      vector< vector<int> > population; //stores entire population
+      vector<int> qualities; //stores the amount of attacks of each generation, to keep track of the improvement
   
-
+      //next few lines generate the first population, values in the arrays should be changed to choose the initial population
       int arr[] = {0,1,2,3,4,5,6,7};
       vector<int> inicial1(arr, arr + sizeof(arr)/sizeof(int));
       population.push_back(inicial1);
@@ -45,7 +45,7 @@ int main()
   
       population = generateOffspring(population);
       population = generateMutants(population);
-     // cout<<"Amount of attacks between two queens:"<<qualityPopulation(population)<<endl;
+      
       qualities.push_back(qualityPopulation(population));
 
       for(int i = 0; i < 2 ; i++)
