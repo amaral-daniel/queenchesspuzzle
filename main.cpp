@@ -7,59 +7,59 @@
 
 
 using namespace std;
-void printTabuleiro(vector<int> tabuleiro);
-int checarRainhas(vector<int> tabuleiro);
-vector<int> mutacao(vector<int> individuo);
+void printBoard(vector<int> board);
+int checkAttacks(vector<int> board);
+vector<int> mutate(vector<int> individuo);
 vector<int> crossover(vector<int> individuo1,vector<int> individuo2);
-vector< vector<int> > fazerMutacao (vector< vector<int> > populacao);
-vector< vector<int> > fazerCrossover (vector< vector<int> > populacao);
-void printPopulacao(vector< vector<int> > populacao);
-vector< vector<int> > selecionarMelhores( vector< vector<int> > populacao);
-int qualidadePopulacao( vector< vector<int> > populacao);
+vector< vector<int> > generateMutants (vector< vector<int> > population);
+vector< vector<int> > generateOffspring (vector< vector<int> > population);
+void printPopulation(vector< vector<int> > population);
+vector< vector<int> > naturalSelection( vector< vector<int> > population);
+int qualityPopulation( vector< vector<int> > population);
 void printVector(vector<int> a);
 
 
 int main()
 {
-      vector< vector<int> > populacao;
-      vector<int> qualidades;
+      vector< vector<int> > population;
+      vector<int> qualities;
   
 
       int arr[] = {0,1,2,3,4,5,6,7};
       vector<int> inicial1(arr, arr + sizeof(arr)/sizeof(int));
-      populacao.push_back(inicial1);
+      population.push_back(inicial1);
 
       int arr1[] = {0,0,0,0,2,3,4,5};
       vector<int> inicial2(arr1, arr1 + sizeof(arr1)/sizeof(int));
-      populacao.push_back(inicial2);
+      population.push_back(inicial2);
 
       int arr2[] = {0,1,2,3,2,6,6,7};
       vector<int> inicial3(arr2, arr2 + sizeof(arr2)/sizeof(int));
-      populacao.push_back(inicial3);
+      population.push_back(inicial3);
 
       int arr3[] = {1,1,2,2,4,5,6,7};
       vector<int> inicial4(arr3, arr3 + sizeof(arr3)/sizeof(int));
-      populacao.push_back(inicial4);
+      population.push_back(inicial4);
   
   
   
-      populacao = fazerCrossover(populacao);
-      populacao = fazerMutacao(populacao);
-      cout<<"ataques da populacao:"<<qualidadePopulacao(populacao)<<endl;
-      qualidades.push_back(qualidadePopulacao(populacao));
+      population = generateOffspring(population);
+      population = generateMutants(population);
+     // cout<<"Amount of attacks between two queens:"<<qualityPopulation(population)<<endl;
+      qualities.push_back(qualityPopulation(population));
 
       for(int i = 0; i < 2 ; i++)
       {
-            cout<<"GERACAO::"<<i<<endl;
-            populacao = selecionarMelhores(populacao);
-            populacao = fazerCrossover(populacao);
-            populacao = fazerMutacao(populacao);
-            qualidades.push_back(qualidadePopulacao(populacao));
+            cout<<"GENERATION::"<<i<<endl;
+            population = naturalSelection(population);
+            population = generateOffspring(population);
+            population = generateMutants(population);
+            qualities.push_back(qualityPopulation(population));
       }
 
-
-      for(int i = 0; i < qualidades.size() ; i++)
-            cout<<"Geracao "<< i<<" : "<<qualidades[i]<<endl;
+      cout<<"Amount of attacks between two queens in each generation:"<<endl;
+      for(int i = 0; i < qualities.size() ; i++)
+            cout<<"Generation "<< i<<" : "<<qualities[i]<<endl;
 
   return 0;
 
@@ -69,14 +69,14 @@ int main()
 
 
 
-void printTabuleiro(vector<int> tabuleiro)
+void printBoard(vector<int> board)
 {
       cout<<"           "<<endl;
       for(int i = 0; i < 8;i++)
       {
             for(int j = 0; j < 8;j++)
             {
-                if(tabuleiro[i] != j)
+                if(board[i] != j)
                     cout<<"[_]";
                 else
                     cout<<"[X]";
@@ -85,14 +85,14 @@ void printTabuleiro(vector<int> tabuleiro)
           }
 }
 
-int checarRainhas(vector<int> tabuleiro)
+int checkAttacks(vector<int> board)
 {
       int attacksVertical = 0;
       for (int i = 0; i < 8; i++ )
       {
             for(int j = 0; j < 8 ; j++)
             {
-                  if(tabuleiro[i] == tabuleiro[j])
+                  if(board[i] == board[j])
                   {
                       attacksVertical+=1;
                   }
@@ -107,11 +107,11 @@ int checarRainhas(vector<int> tabuleiro)
       for (int i = 0; i < 8; i++ )
       {
             x1 = i;
-            y1 = tabuleiro[i];
+            y1 = board[i];
             for(int j = 0; j < 8 ; j++)
             {
                   x2 = j;
-                  y2 = tabuleiro[j];
+                  y2 = board[j];
 
                   deltax = x1 - x2;
                   deltay = y1 - y2;
@@ -133,138 +133,138 @@ int checarRainhas(vector<int> tabuleiro)
 
 vector<int> crossover(vector<int> individuo1,vector<int> individuo2)
 {
-    vector<int> resultado;
+    vector<int> result;
   
     for(int i = 0; i < 4;i++ )
     {
-          resultado.push_back(individuo1[i]);
+          result.push_back(individuo1[i]);
     }
     for(int i = 4; i < 8;i++ )
     {
-          resultado.push_back(individuo2[i]);
+          result.push_back(individuo2[i]);
     }
   
-    return resultado;
+    return result;
 }
 
-vector<int> mutacao(vector<int> individuo)
+vector<int> mutate(vector<int> individuo)
 {
-      vector<int> resultado;
+      vector<int> result;
   
-      resultado = individuo;
-      resultado[rand() % 8] = rand() % 8;
-      resultado[rand() % 8] = rand() % 8;
+      result = individuo;
+      result[rand() % 8] = rand() % 8;
+      result[rand() % 8] = rand() % 8;
     
-      return resultado;
+      return result;
 }
 
-vector< vector<int> > fazerMutacao (vector< vector<int> > populacao)
+vector< vector<int> > generateMutants (vector< vector<int> > population)
 {
-      vector< vector<int> > resultado = populacao;
-      resultado.push_back(mutacao(populacao[4]));
-      resultado.push_back(mutacao(populacao[5]));
-      resultado.push_back(mutacao(populacao[6]));
-      resultado.push_back(mutacao(populacao[7]));
+      vector< vector<int> > result = population;
+      result.push_back(mutate(population[4]));
+      result.push_back(mutate(population[5]));
+      result.push_back(mutate(population[6]));
+      result.push_back(mutate(population[7]));
   
-      return resultado;
+      return result;
 
 }
 
 
-vector< vector<int> > fazerCrossover (vector< vector<int> > populacao)
+vector< vector<int> > generateOffspring (vector< vector<int> > population)
 {
-      vector< vector<int> > resultado = populacao;
+      vector< vector<int> > result = population;
 
 
-      resultado.push_back(crossover(populacao[0],populacao[1]));
-      resultado.push_back(crossover(populacao[1],populacao[0]));
-      resultado.push_back(crossover(populacao[2],populacao[3]));
-      resultado.push_back(crossover(populacao[3],populacao[2]));
+      result.push_back(crossover(population[0],population[1]));
+      result.push_back(crossover(population[1],population[0]));
+      result.push_back(crossover(population[2],population[3]));
+      result.push_back(crossover(population[3],population[2]));
 
-      return resultado;
+      return result;
 
 }
 
-void printPopulacao(vector< vector<int> > populacao)
+void printPopulation(vector< vector<int> > population)
 {
   
-      cout<<"*****INICIAIS******"<<endl;
+      cout<<"*****PARENTS******"<<endl;
 
-      printTabuleiro(populacao[0]);
-      printTabuleiro(populacao[1]);
-      printTabuleiro(populacao[2]);
-      printTabuleiro(populacao[3]);
+      printBoard(population[0]);
+      printBoard(population[1]);
+      printBoard(population[2]);
+      printBoard(population[3]);
 
-      cout<<"*****FILHOS******"<<endl;
+      cout<<"*****OFFSPRING******"<<endl;
 
-      printTabuleiro(populacao[4]);
-      printTabuleiro(populacao[5]);
-      printTabuleiro(populacao[6]);
-      printTabuleiro(populacao[7]);
+      printBoard(population[4]);
+      printBoard(population[5]);
+      printBoard(population[6]);
+      printBoard(population[7]);
 
-      cout<<"*****MUTANTES******"<<endl;
+      cout<<"*****MUTANTS******"<<endl;
 
-      printTabuleiro(populacao[8]);
-      printTabuleiro(populacao[9]);
-      printTabuleiro(populacao[10]);
-      printTabuleiro(populacao[11]);
+      printBoard(population[8]);
+      printBoard(population[9]);
+      printBoard(population[10]);
+      printBoard(population[11]);
 
 }
 
 
 
-int qualidadePopulacao(vector< vector<int> > populacao)
+int qualityPopulation(vector< vector<int> > population)
 {
-      int qualidade = 0;
-      for(int i = 0; i < populacao.size() ; i++)
+      int quality = 0;
+      for(int i = 0; i < population.size() ; i++)
       {
-            qualidade += checarRainhas(populacao[i]);
+            quality += checkAttacks(population[i]);
       }
 
-      return qualidade;
+      return quality;
 
 }
 
 
 
-vector< vector<int> > selecionarMelhores( vector< vector<int> > populacao)
+vector< vector<int> > naturalSelection( vector< vector<int> > population)
 {
-      vector<int> qualidadesDesorganizado;
-      vector<int> qualidadesOrganizado;
-      vector<int> indicesEscolhidos;
-      vector< vector<int> > novaPopulacao;
+      vector<int> qualitiesUnsorted;
+      vector<int> qualitiesSorted;
+      vector<int> chosenIndexes;
+      vector< vector<int> > newPopulation;
 
-      for(int i = 0; i < populacao.size() ; i++)
+      for(int i = 0; i < population.size() ; i++)
       {
-             qualidadesDesorganizado.push_back(checarRainhas(populacao[i]));
+             qualitiesUnsorted.push_back(checkAttacks(population[i]));
       }
 
-      qualidadesOrganizado = qualidadesDesorganizado;
-      sort(qualidadesOrganizado.begin(), qualidadesOrganizado.end());
-      cout<<"melhor dessa geracao:"<<qualidadesOrganizado[0]<<endl;
+      qualitiesSorted = qualitiesUnsorted;
+      sort(qualitiesSorted.begin(), qualitiesSorted.end());
+      cout<<"Amount of attacks in the best individual of this generation:"<<qualitiesSorted[0]<<endl;
 
 
       for(int j = 0; j < 4 ; j++)
       {
             for(int i = 0; i <  12;i++)
             {
-                if(qualidadesOrganizado[j] == qualidadesDesorganizado[i] )
+                if(qualitiesSorted[j] == qualitiesUnsorted[i] )
                 {
-                      indicesEscolhidos.push_back(i);
-                      qualidadesDesorganizado[i] = 1000;
+                      chosenIndexes.push_back(i);
+                      qualitiesUnsorted[i] = 1000;
                       i = 12;
                 }
             }
       }
 
 
-      for(int i = 0; i < indicesEscolhidos.size(); i++)
+      for(int i = 0; i < chosenIndexes.size(); i++)
       {
-            novaPopulacao.push_back(populacao[indicesEscolhidos[i]]);
+            newPopulation.push_back(population[chosenIndexes[i]]);
       }
 
 
-      return novaPopulacao;
+      return newPopulation;
 
 
 
