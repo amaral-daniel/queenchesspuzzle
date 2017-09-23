@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <algorithm>
 
-
 using namespace std;
 void printBoard(vector<int> board);
 int checkAttacks(vector<int> board);
@@ -17,7 +16,6 @@ void printPopulation(vector< vector<int> > population);
 vector< vector<int> > naturalSelection( vector< vector<int> > population);
 int qualityPopulation( vector< vector<int> > population);
 void printVector(vector<int> a);
-
 
 int main()
 {
@@ -64,10 +62,6 @@ int main()
   return 0;
 
 }
-
-
-
-
 
 void printBoard(vector<int> board)
 {
@@ -130,7 +124,6 @@ int checkAttacks(vector<int> board)
 
 }
 
-
 vector<int> crossover(vector<int> individuo1,vector<int> individuo2)
 {
     vector<int> result;
@@ -161,20 +154,16 @@ vector<int> mutate(vector<int> individuo)
 vector< vector<int> > generateMutants (vector< vector<int> > population)
 {
       vector< vector<int> > result = population;
-      result.push_back(mutate(population[4]));
-      result.push_back(mutate(population[5]));
-      result.push_back(mutate(population[6]));
-      result.push_back(mutate(population[7]));
-  
+      for(int i = 4; i < 8; i++)
+        result.push_back(mutate(population[i]));
+
       return result;
 
 }
 
-
 vector< vector<int> > generateOffspring (vector< vector<int> > population)
 {
       vector< vector<int> > result = population;
-
 
       result.push_back(crossover(population[0],population[1]));
       result.push_back(crossover(population[1],population[0]));
@@ -189,29 +178,21 @@ void printPopulation(vector< vector<int> > population)
 {
   
       cout<<"*****PARENTS******"<<endl;
+      for(int i = 0; i < 4; i++)
+        printBoard(population[i]);
 
-      printBoard(population[0]);
-      printBoard(population[1]);
-      printBoard(population[2]);
-      printBoard(population[3]);
 
       cout<<"*****OFFSPRING******"<<endl;
 
-      printBoard(population[4]);
-      printBoard(population[5]);
-      printBoard(population[6]);
-      printBoard(population[7]);
-
+      for(int i = 4; i < 8; i++)
+        printBoard(population[i]);
+   
       cout<<"*****MUTANTS******"<<endl;
 
-      printBoard(population[8]);
-      printBoard(population[9]);
-      printBoard(population[10]);
-      printBoard(population[11]);
+      for(int i = 8; i < 12; i++)
+        printBoard(population[i]);
 
 }
-
-
 
 int qualityPopulation(vector< vector<int> > population)
 {
@@ -224,8 +205,6 @@ int qualityPopulation(vector< vector<int> > population)
       return quality;
 
 }
-
-
 
 vector< vector<int> > naturalSelection( vector< vector<int> > population)
 {
@@ -263,18 +242,13 @@ vector< vector<int> > naturalSelection( vector< vector<int> > population)
             newPopulation.push_back(population[chosenIndexes[i]]);
       }
 
-
       return newPopulation;
 
-
-
 }
-
 
 void printVector(vector<int> a)
 {
       for(int i = 0; i < a.size() ; i++)
             cout<<a[i]<<", ";
       cout<<endl;
-
 }
